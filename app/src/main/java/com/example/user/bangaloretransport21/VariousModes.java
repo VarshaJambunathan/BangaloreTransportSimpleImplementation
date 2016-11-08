@@ -32,10 +32,7 @@ public class VariousModes extends AppCompatActivity {
         mOrigin=(EditText)findViewById(R.id.etOrigin1);
         mDestination=(EditText)findViewById(R.id.etDestination1);
 
-        mOrigin.setText(MapsActivity.origin);
-        mDestination.setText(MapsActivity.destination);
-
-        initUI();
+       // initUI();
     }
 
     public void initUI() {
@@ -67,7 +64,7 @@ public class VariousModes extends AppCompatActivity {
                                 getBaseContext(), LinearLayoutManager.VERTICAL, false
                         )
                 );
-                recyclerView.setAdapter(new RecycleAdapter());
+                //recyclerView.setAdapter(new RecycleAdapter());
 
                 container.addView(view);
                 return view;
@@ -132,7 +129,7 @@ public class VariousModes extends AppCompatActivity {
             }
         });
     }
-
+        /*
     public class RecycleAdapter extends RecyclerView.Adapter<RecycleAdapter.ViewHolder> {
 
         @Override
@@ -144,7 +141,9 @@ public class VariousModes extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             int item = viewPager.getCurrentItem();
+            /*
             switch(item){
+
                 // item= car,walk,cycle
                 // position = position of the card clicked
                 case 0:
@@ -162,7 +161,7 @@ public class VariousModes extends AppCompatActivity {
                 case 2:
                     //car
                     Log.v("Various Modes","cycle");
-                    holder.txt.setText(String.format(" Distance : " + DirectionFinder.routesCar.get(position).duration.text + "Time :" +
+                    holder.txt.setText(String.format(" Distance : " + DirectionFinder.routes.get(position).duration.text + "Time :" +
                             DirectionFinder.routesCar.get(position).distance.text));
                     break;
                 case 3:
@@ -189,9 +188,9 @@ public class VariousModes extends AppCompatActivity {
             Log.d("TAG", "getItemCount: "+DirectionFinder.routesCar);
             // switch case count of each list array
             switch(item){
-                case 0: return DirectionFinder.routesCycle.size();
-                case 1: return DirectionFinder.routesWalk.size();
-                case 2: return DirectionFinder.routesCar.size();
+                case 0: return 4;
+                case 1: return 3;
+                case 2: return 2;
                 case 3: return 1; //Bus
                 default: return 1;
             }
@@ -206,5 +205,5 @@ public class VariousModes extends AppCompatActivity {
                 txt = (TextView) itemView.findViewById(R.id.txt_vp_item_list);
             }
         }
-    }
+    }*/
 }

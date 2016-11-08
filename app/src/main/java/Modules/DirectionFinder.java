@@ -24,13 +24,17 @@ import java.util.List;
  * Created by user on 21-08-2016.
  */
 public class DirectionFinder {
-    private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
-    private static final String GOOGLE_API_KEY = "AIzaSyDnwLF2-WfK8cVZt9OoDYJ9Y8kspXhEHfI";
-    private DirectionFinderListener listener;
-    private String origin;
-    private String destination;
-    private int mode;
-    public static List<Route> routesCycle, routesWalk, routesCar;
+    public static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
+    public static final String GOOGLE_API_KEY = "AIzaSyDnwLF2-WfK8cVZt9OoDYJ9Y8kspXhEHfI";
+    public DirectionFinderListener listener;
+    public String origin;
+    public String destination;
+    public static List<Route> routes;
+    public static String response;
+
+    public static final String Response(){
+        return response;
+    }
 
     public DirectionFinder(DirectionFinderListener listener, String origin, String destination) {
         this.listener = listener;
@@ -42,36 +46,17 @@ public class DirectionFinder {
         listener.onDirectionFinderStart();
 
         // To fetch the routes using different modes
-        new DownloadRawData().execute(createUrlCar());
-        new DownloadRawData().execute(createUrlWalk());
-        new DownloadRawData().execute(createUrlCycle());
+        new DownloadRawData().execute(createUrl());
     }
 
-    private String createUrlCar() throws UnsupportedEncodingException {
+    public String createUrl() throws UnsupportedEncodingException {
         String urlOrigin = URLEncoder.encode(origin, "utf-8");
         String urlDestination = URLEncoder.encode(destination, "utf-8");
-        mode = 3;
 
         return DIRECTION_URL_API + "origin=" + urlOrigin + "&destination=" + urlDestination + "&key=" + GOOGLE_API_KEY + "&alternatives=true";
     }
 
-    private String createUrlWalk() throws UnsupportedEncodingException {
-        String urlOrigin = URLEncoder.encode(origin, "utf-8");
-        String urlDestination = URLEncoder.encode(destination, "utf-8");
-        mode = 2;
-
-        return DIRECTION_URL_API + "origin=" + urlOrigin + "&destination=" + urlDestination + "&key=" + GOOGLE_API_KEY + "&mode=WALKING" + "&alternatives=true";
-    }
-
-    private String createUrlCycle() throws UnsupportedEncodingException {
-        String urlOrigin = URLEncoder.encode(origin, "utf-8");
-        String urlDestination = URLEncoder.encode(destination, "utf-8");
-        mode = 1;
-
-        return DIRECTION_URL_API + "origin=" + urlOrigin + "&destination=" + urlDestination + "&key=" + GOOGLE_API_KEY + "&mode=BICYCLING" + "&alternatives=true";
-    }
-
-    private class DownloadRawData extends AsyncTask<String, Void, String> {
+    public class DownloadRawData extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -107,34 +92,19 @@ public class DirectionFinder {
         }
     }
 
-    private void parseJSon(String data) throws JSONException {
+    public void parseJSon(String data) throws JSONException {
         if (data == null)
             return;
 
-        switch (mode) {
-            case 2:
-                routesCar = indivJSon(data);
-                Log.d("TAG", "parseJSon: " + routesCar);
-                listener.onDirectionFinderSuccess(routesCar);
-                break;
-
-            case 1:
-                routesWalk = indivJSon(data);
-                Log.d("TAG", "parseJSon: " + routesWalk);
-                listener.onDirectionFinderSuccess(routesWalk);
-                break;
-
-            case 0:
-                routesCycle = indivJSon(data);
-                Log.d("TAG", "parseJSon: " + routesCycle);
-                listener.onDirectionFinderSuccess(routesCycle);
-                break;
-        }
+        routes = indivJSon(data);
+        Log.d("TAG", "parseJSon: " + routes);
+        listener.onDirectionFinderSuccess(routes);
     }
 
 
-    private List<Route> indivJSon(String data) throws JSONException {
+    public List<Route> indivJSon(String data) throws JSONException {
 
+        response = data;
         Log.d("TAG", "indivJSon: "+data);
         List<Route> routes = new ArrayList<>();
         JSONObject jsonData = new JSONObject(data);
@@ -166,7 +136,7 @@ public class DirectionFinder {
         return routes;
     }
 
-    private List<LatLng> decodePolyLine(final String poly) {
+    public List<LatLng> decodePolyLine(final String poly) {
         int len = poly.length();
         int index = 0;
         List<LatLng> decoded = new ArrayList<>();

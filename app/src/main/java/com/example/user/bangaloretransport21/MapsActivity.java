@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,7 +44,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
-    public static String origin,destination;
+    public  String origin,destination;
+    public String response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +73,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 //use Snackbar
-                Intent i = new Intent(MapsActivity.this,VariousModes.class);
+                Intent i = new Intent(MapsActivity.this,ModesMock.class).putExtra("data",response);
                 startActivity(i);
             }
         });
     }
 
-    private void sendRequest() {
+    public void sendRequest() {
         origin = etOrigin.getText().toString();
         destination = etDestination.getText().toString();
         if (origin.isEmpty()) {
@@ -91,6 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         try {
             new DirectionFinder(this, origin, destination).execute();
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
